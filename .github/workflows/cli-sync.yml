@@ -1,0 +1,23 @@
+name: CLI Sync Fork
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  repo-sync:
+    runs-on: ubuntu-latest
+    # НАСТРОЙКА ПРАВ ДОСТУПА:
+    permissions:
+      contents: write # Разрешает GitHub CLI вносить изменения в код форка
+    
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Sync fork via GitHub CLI
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh repo sync ${{ github.repository }} --branch main
